@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,21 +29,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class Dreamer extends AppCompatActivity {
     SharedPreferences sharedpreferences;
+    String currentPhotoPath;
     private Button saveData;
     private EditText editText;
-    public static final String mypreference = "mypref";
+    private TextView textImage;
+    public static final String mypreference = "myprefDreamer";
     public static final String Dreamer = "dreamerDescriptionKey";
+    public static final String ImageDreamer = "dreamerImageKey";
 
     private static final int REQUEST_PERMISSION_CAMERA = 100;
     private static final int REQUEST_IMAGE_CAMERA = 101;
@@ -55,7 +65,7 @@ public class Dreamer extends AppCompatActivity {
         setTitle("Soñador");
 
         mPhotoImageView = (ImageView) findViewById(R.id.imageView);
-
+        textImage = (TextView) findViewById(R.id.textImageUri);
 
         editText = (EditText) findViewById(R.id.textViewDescription);
 
@@ -67,7 +77,6 @@ public class Dreamer extends AppCompatActivity {
             }
         });
 
-
         checkData();
 
     }
@@ -78,15 +87,24 @@ public class Dreamer extends AppCompatActivity {
         if (sharedpreferences.contains(Dreamer)) {
             editText.setText(sharedpreferences.getString(Dreamer, ""));
         }
+        if (sharedpreferences.contains(ImageDreamer)) {
+            textImage.setText(sharedpreferences.getString(ImageDreamer, ""));
+            mPhotoImageView.setImageURI(Uri.parse(textImage.getText().toString()));
+            System.out.println("ENTRO AL CHECK DATA: " + textImage.getText().toString());
+        }
     }
 
     public void saveData() {
         String n = editText.getText().toString();
+        String m = textImage.getText().toString();
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(Dreamer, n);
+        editor.putString(ImageDreamer, m);
         editor.commit();
-        Toast.makeText(this, "Los datos han sido guardados con éxito", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Los datos han sido guardados con éxito para el primer paso", Toast.LENGTH_SHORT).show();
         onClickBack();
+        System.out.println("ENTRO AL SAVE DESCRIPTION DATA: " + n);
+        System.out.println("ENTRO AL SAVE IMAGE DATA: " + m);
 
     }
 
@@ -106,7 +124,16 @@ public class Dreamer extends AppCompatActivity {
         if (cameraIntent.resolveActivity(getPackageManager())!=null){
             //startActivityForResult(cameraIntent, REQUEST_IMAGE_CAMERA);
             File photoFile = null;
-            photoFile = createFile();
+            try {
+                photoFile = createFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (photoFile!=null) {
+                Uri photoUri = FileProvider.getUriForFile(this,"com.kevinhomorales.anclaideas", photoFile);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAMERA);
+            }
         }
     }
 
@@ -115,6 +142,8 @@ public class Dreamer extends AppCompatActivity {
         String imgFileName = "IMG " + timeStamp + " ";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imgFileName, ".jpg",storageDir);
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     @Override
@@ -133,9 +162,12 @@ public class Dreamer extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_IMAGE_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                Log.i("TAG", "SE IMPRIME EL BITMAP: " + bitmap);
-                mPhotoImageView.setImageBitmap(bitmap);
+//                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+//                Log.i("TAG", "SE IMPRIME EL BITMAP: " + bitmap);
+//                mPhotoImageView.setImageBitmap(bitmap);
+                mPhotoImageView.setImageURI(Uri.parse(currentPhotoPath));
+                textImage.setText(currentPhotoPath);
+                System.out.println("ENTRO AL RESULT OK: " + currentPhotoPath);
             } else {
                 Toast.makeText(this, "Necesitas tomar una foto para que se muestre", Toast.LENGTH_SHORT).show();
             }
