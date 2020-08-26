@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Anclaideas</string>
+    <string name="app_name">W.D Anclaideas</string>
+    <string name="start">Empezar</string>
+    <string name="step1">Paso 1</string>
+    <string name="step2">Paso 2</string>
+    <string name="step3">Paso 3</string>
+    <string name="description">Aqui ira la descripción que Adriana envíe</string>
+    <string name="save">Guardar</string>
+    <string name="dreamerDescription">Ingrese una descripción para soñador</string>
+    <string name="realisticDescription">Ingrese una descripción para realista</string>
+    <string name="criticalDescription">Ingrese una descripción para crítico</string>
 </resources>
