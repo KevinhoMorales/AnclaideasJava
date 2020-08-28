@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:padding="20dp"
                 android:text="@string/description"
-                android:textColor="@color/colorAccent"
+                android:textColor="#000000"
                 android:textSize="22dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
