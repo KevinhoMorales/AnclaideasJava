@@ -180,7 +180,7 @@ public class Critical extends AppCompatActivity {
 
                 break;
             case R.id.action_video:
-                String url = "http://www.youtube.com/watch?v=qvtCk1wZ7LM";
+                String url = "https://www.youtube.com/watch?v=7OaCtYUammc";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
                 break;

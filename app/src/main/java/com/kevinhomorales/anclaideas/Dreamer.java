@@ -191,7 +191,7 @@ public class Dreamer extends AppCompatActivity {
 
                 break;
             case R.id.action_video:
-                String url = "http://www.youtube.com/watch?v=qvtCk1wZ7LM";
+                String url = "https://www.youtube.com/watch?v=f7Z5JO8gcn8";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
                 break;
