@@ -6,4 +6,10 @@
         android:title="Agregar imágen">
     </item>
 
+    <item
+        android:id="@+id/action_video"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="Ver video">
+    </item>
+
 </menu>
