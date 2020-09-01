@@ -150,9 +150,6 @@ public class Realistic extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_IMAGE_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
-//                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//                Log.i("TAG", "SE IMPRIME EL BITMAP: " + bitmap);
-//                mPhotoImageView.setImageBitmap(bitmap);
                 mPhotoImageView.setImageURI(Uri.parse(currentPhotoPath));
                 textImage.setText(currentPhotoPath);
                 System.out.println("ENTRO AL RESULT OK: " + currentPhotoPath);
